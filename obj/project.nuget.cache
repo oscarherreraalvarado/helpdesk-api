@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "gZZEBWTQn7M=",
+  "dgSpecHash": "IA5L+thAVBw=",
   "success": true,
-  "projectFilePath": "C:\\Users\\USUARIO\\Desktop\\GestiondeTickets\\helpdesk-api\\helpdesk\\Backend.Api\\Backend.Api.csproj",
+  "projectFilePath": "C:\\Users\\USUARIO\\Desktop\\GestiondeTickets\\GestiondeTicket\\helpdesk\\Backend.Api\\Backend.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\USUARIO\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\USUARIO\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.1\\microsoft.aspnetcore.openapi.10.0.1.nupkg.sha512",

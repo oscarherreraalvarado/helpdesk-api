@@ -3,6 +3,7 @@ using System;
 using Backend.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251218235617_AddTicketActivities")]
+    partial class AddTicketActivities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.1");
@@ -61,40 +64,6 @@ namespace Backend.Api.Migrations
                     b.ToTable("Tickets");
                 });
 
-            modelBuilder.Entity("Backend.Api.Models.TicketActivity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("CreatedById")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("FromStatus")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("TicketId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ToStatus")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TicketActivities");
-                });
-
             modelBuilder.Entity("Backend.Api.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -106,14 +75,6 @@ namespace Backend.Api.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

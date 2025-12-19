@@ -41,7 +41,6 @@ public class TicketsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(Ticket ticket)
     {
-        // TicketId automático si no viene
         if (string.IsNullOrWhiteSpace(ticket.TicketId))
             ticket.TicketId = $"TCK-{DateTime.UtcNow:yyyyMMddHHmmss}";
 
@@ -49,6 +48,17 @@ public class TicketsController : ControllerBase
         ticket.UpdatedAt = DateTime.UtcNow;
 
         _db.Tickets.Add(ticket);
+        await _db.SaveChangesAsync(); // <-- aquí ya existe ticket.Id
+
+        _db.TicketActivities.Add(new TicketActivity
+        {
+            TicketId = ticket.Id, // <-- ahora sí correcto
+            Type = "Created",
+            Message = "Ticket creado",
+            ToStatus = ticket.Status,
+            CreatedAt = DateTime.UtcNow
+        });
+
         await _db.SaveChangesAsync();
 
         return Ok(ticket);
@@ -60,10 +70,38 @@ public class TicketsController : ControllerBase
         var ticket = await _db.Tickets.FirstOrDefaultAsync(t => t.Id == id);
         if (ticket == null) return NotFound();
 
+        var oldStatus = ticket.Status;
+
         ticket.Status = status;
         ticket.UpdatedAt = DateTime.UtcNow;
+
+        _db.TicketActivities.Add(new TicketActivity
+        {
+            TicketId = ticket.Id,
+            Type = "StatusChanged",
+            Message = $"Estado cambiado de {oldStatus} a {status}",
+            FromStatus = oldStatus,
+            ToStatus = status,
+            CreatedAt = DateTime.UtcNow
+        });
 
         await _db.SaveChangesAsync();
         return Ok(ticket);
     }
+
+
+    [HttpGet("{id:int}/timeline")]
+    public async Task<IActionResult> GetTimeline(int id)
+    {
+        var exists = await _db.Tickets.AsNoTracking().AnyAsync(t => t.Id == id);
+        if (!exists) return NotFound();
+
+        var timeline = await _db.TicketActivities.AsNoTracking()
+            .Where(a => a.TicketId == id)
+            .OrderByDescending(a => a.CreatedAt)
+            .ToListAsync();
+
+        return Ok(timeline);
+    }
+
 }

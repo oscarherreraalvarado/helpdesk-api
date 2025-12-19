@@ -3704,11 +3704,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\USUARIO\\Desktop\\GestiondeTickets\\helpdesk-api\\helpdesk\\Backend.Api\\Backend.Api.csproj",
+      "projectUniqueName": "C:\\Users\\USUARIO\\Desktop\\GestiondeTickets\\GestiondeTicket\\helpdesk\\Backend.Api\\Backend.Api.csproj",
       "projectName": "Backend.Api",
-      "projectPath": "C:\\Users\\USUARIO\\Desktop\\GestiondeTickets\\helpdesk-api\\helpdesk\\Backend.Api\\Backend.Api.csproj",
+      "projectPath": "C:\\Users\\USUARIO\\Desktop\\GestiondeTickets\\GestiondeTicket\\helpdesk\\Backend.Api\\Backend.Api.csproj",
       "packagesPath": "C:\\Users\\USUARIO\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\USUARIO\\Desktop\\GestiondeTickets\\helpdesk-api\\helpdesk\\Backend.Api\\obj\\",
+      "outputPath": "C:\\Users\\USUARIO\\Desktop\\GestiondeTickets\\GestiondeTicket\\helpdesk\\Backend.Api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\USUARIO\\AppData\\Roaming\\NuGet\\NuGet.Config"
