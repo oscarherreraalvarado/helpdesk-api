@@ -1,4 +1,5 @@
 using Backend.Api.Data;
+using Backend.Api.Security;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,19 +15,16 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest req)
     {
-        var user = await _db.Users
-            .FirstOrDefaultAsync(u => u.Email == req.Email && u.Password == req.Password);
+        if (string.IsNullOrWhiteSpace(req.Email) || string.IsNullOrWhiteSpace(req.Password))
+            return BadRequest("Email y Password son requeridos.");
 
-        if (user == null)
-            return Unauthorized("Credenciales inválidas");
+        var user = await _db.Users.AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Email == req.Email);
 
-        return Ok(new
-        {
-            user.Id,
-            user.Nombre,
-            user.Email,
-            user.Role
-        });
+        if (user == null || !PasswordHasher.Verify(req.Password, user.PasswordHash))
+            return Unauthorized("Credenciales inválidas.");
+
+        return Ok(new { user.Id, user.Nombre, user.Email, user.Role });
     }
 }
 

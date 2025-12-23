@@ -56,6 +56,7 @@ public class TicketsController : ControllerBase
             Type = "Created",
             Message = "Ticket creado",
             ToStatus = ticket.Status,
+            CreatedById = ticket.RequesterId,
             CreatedAt = DateTime.UtcNow
         });
 
@@ -65,23 +66,39 @@ public class TicketsController : ControllerBase
     }
 
     [HttpPut("{id:int}/status")]
-    public async Task<IActionResult> UpdateStatus(int id, [FromBody] string status)
+    public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateStatusRequest req)
     {
-        var ticket = await _db.Tickets.FirstOrDefaultAsync(t => t.Id == id);
-        if (ticket == null) return NotFound();
+        if (string.IsNullOrWhiteSpace(req.Status))
+            return BadRequest("Status requerido.");
 
+        // 1️⃣ Validar que el ticket exista
+        var ticket = await _db.Tickets.FirstOrDefaultAsync(t => t.Id == id);
+        if (ticket == null)
+            return NotFound("Ticket no existe.");
+
+        // 2️⃣ Validar que el usuario exista  ✅ AQUÍ VA
+        var userExists = await _db.Users.AsNoTracking()
+            .AnyAsync(u => u.Id == req.UserId);
+
+        if (!userExists)
+            return BadRequest("UserId no existe.");
+
+        // 3️⃣ Guardar estado anterior
         var oldStatus = ticket.Status;
 
-        ticket.Status = status;
+        // 4️⃣ Actualizar ticket
+        ticket.Status = req.Status;
         ticket.UpdatedAt = DateTime.UtcNow;
 
+        // 5️⃣ Registrar actividad con usuario
         _db.TicketActivities.Add(new TicketActivity
         {
             TicketId = ticket.Id,
             Type = "StatusChanged",
-            Message = $"Estado cambiado de {oldStatus} a {status}",
+            Message = $"Estado cambiado de {oldStatus} a {req.Status}",
             FromStatus = oldStatus,
-            ToStatus = status,
+            ToStatus = req.Status,
+            CreatedById = req.UserId,
             CreatedAt = DateTime.UtcNow
         });
 
@@ -90,18 +107,39 @@ public class TicketsController : ControllerBase
     }
 
 
+
     [HttpGet("{id:int}/timeline")]
     public async Task<IActionResult> GetTimeline(int id)
     {
         var exists = await _db.Tickets.AsNoTracking().AnyAsync(t => t.Id == id);
         if (!exists) return NotFound();
 
-        var timeline = await _db.TicketActivities.AsNoTracking()
-            .Where(a => a.TicketId == id)
-            .OrderByDescending(a => a.CreatedAt)
-            .ToListAsync();
+        var timeline = await (from a in _db.TicketActivities.AsNoTracking()
+                              join u in _db.Users.AsNoTracking()
+                                on a.CreatedById equals u.Id into uu
+                              from u in uu.DefaultIfEmpty()
+                              where a.TicketId == id
+                              orderby a.CreatedAt descending
+                              select new
+                              {
+                                  a.Id,
+                                  a.Type,
+                                  a.Message,
+                                  a.FromStatus,
+                                  a.ToStatus,
+                                  a.CreatedById,
+                                  a.CreatedAt,
+                                  CreatedByName = u != null ? u.Nombre : null
+                              }).ToListAsync();
 
         return Ok(timeline);
+    }
+
+
+    public class UpdateStatusRequest
+    {
+        public string Status { get; set; } = "";
+        public int UserId { get; set; }
     }
 
 }
