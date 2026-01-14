@@ -261,7 +261,7 @@ C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\b
 C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\Backend.Api.dll
 C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\Backend.Api.pdb
 C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\Humanizer.dll
-C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\Microsoft.AspNetCore.OpenApi.dll
+C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\Microsoft.Build.dll
 C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\Microsoft.Build.Framework.dll
 C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\Microsoft.Build.Tasks.Core.dll
@@ -279,6 +279,12 @@ C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\b
 C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.Relational.dll
 C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.Sqlite.dll
 C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\Microsoft.NET.StringTools.dll
 C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\Microsoft.OpenApi.dll
 C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\Mono.TextTemplating.dll
@@ -297,6 +303,7 @@ C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\b
 C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\System.Composition.TypedParts.dll
 C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\System.Configuration.ConfigurationManager.dll
 C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\System.Formats.Nrbf.dll
+C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\System.Reflection.MetadataLoadContext.dll
 C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\System.Resources.Extensions.dll
 C:\Users\USUARIO\Desktop\GestiondeTickets\GestiondeTicket\helpdesk\Backend.Api\bin\Debug\net10.0\System.Security.Cryptography.ProtectedData.dll

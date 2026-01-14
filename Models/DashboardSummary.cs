@@ -12,4 +12,5 @@ public class DashboardSummary
 
     public Dictionary<string, int> ByPriority { get; set; } = new();
     public Dictionary<string, int> ByCategory { get; set; } = new();
+    public Dictionary<string, int> OpenByPriority { get; set; } = new();
 }

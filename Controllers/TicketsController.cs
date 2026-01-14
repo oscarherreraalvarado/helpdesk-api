@@ -2,9 +2,13 @@ using Backend.Api.Data;
 using Backend.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Backend.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class TicketsController : ControllerBase
@@ -39,31 +43,61 @@ public class TicketsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(Ticket ticket)
+    public async Task<IActionResult> Create([FromBody] CreateTicketRequest req)
     {
-        if (string.IsNullOrWhiteSpace(ticket.TicketId))
-            ticket.TicketId = $"TCK-{DateTime.UtcNow:yyyyMMddHHmmss}";
+        if (string.IsNullOrWhiteSpace(req.Title))
+            return BadRequest("Title requerido.");
+        if (string.IsNullOrWhiteSpace(req.Description))
+            return BadRequest("Description requerido.");
 
-        ticket.CreatedAt = DateTime.UtcNow;
-        ticket.UpdatedAt = DateTime.UtcNow;
+        // ✅ UserId desde JWT (sub / nameidentifier)
+        var userIdStr =
+            User.FindFirstValue(ClaimTypes.NameIdentifier) ??
+            User.FindFirstValue(JwtRegisteredClaimNames.Sub) ??
+            User.FindFirstValue("sub");
+
+        if (!int.TryParse(userIdStr, out var userId))
+            return Unauthorized("Token inválido (sin userId).");
+
+        var ticket = new Ticket
+        {
+            TicketId = $"TCK-{DateTime.UtcNow:yyyyMMddHHmmss}",
+            Title = req.Title.Trim(),
+            Description = req.Description.Trim(),
+            Status = string.IsNullOrWhiteSpace(req.Status) ? "Open" : req.Status,
+            Priority = string.IsNullOrWhiteSpace(req.Priority) ? "Medium" : req.Priority,
+            Category = string.IsNullOrWhiteSpace(req.Category) ? "General" : req.Category,
+            RequesterId = userId,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
 
         _db.Tickets.Add(ticket);
-        await _db.SaveChangesAsync(); // <-- aquí ya existe ticket.Id
+        await _db.SaveChangesAsync();
 
         _db.TicketActivities.Add(new TicketActivity
         {
-            TicketId = ticket.Id, // <-- ahora sí correcto
+            TicketId = ticket.Id,
             Type = "Created",
             Message = "Ticket creado",
             ToStatus = ticket.Status,
-            CreatedById = ticket.RequesterId,
+            CreatedById = userId,
             CreatedAt = DateTime.UtcNow
         });
 
         await _db.SaveChangesAsync();
-
         return Ok(ticket);
     }
+
+    public class CreateTicketRequest
+    {
+        public string Title { get; set; } = "";
+        public string Description { get; set; } = "";
+        public string Status { get; set; } = "Open";
+        public string Priority { get; set; } = "Medium";
+        public string Category { get; set; } = "General";
+    }
+
 
     [HttpPut("{id:int}/status")]
     public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateStatusRequest req)
@@ -71,26 +105,24 @@ public class TicketsController : ControllerBase
         if (string.IsNullOrWhiteSpace(req.Status))
             return BadRequest("Status requerido.");
 
-        // 1️⃣ Validar que el ticket exista
         var ticket = await _db.Tickets.FirstOrDefaultAsync(t => t.Id == id);
         if (ticket == null)
             return NotFound("Ticket no existe.");
 
-        // 2️⃣ Validar que el usuario exista  ✅ AQUÍ VA
-        var userExists = await _db.Users.AsNoTracking()
-            .AnyAsync(u => u.Id == req.UserId);
+        // ✅ UserId desde JWT (sub / nameidentifier)
+        var userIdStr =
+            User.FindFirstValue(ClaimTypes.NameIdentifier) ??
+            User.FindFirstValue(JwtRegisteredClaimNames.Sub) ??
+            User.FindFirstValue("sub");
 
-        if (!userExists)
-            return BadRequest("UserId no existe.");
+        if (!int.TryParse(userIdStr, out var userId))
+            return Unauthorized("Token inválido (sin userId).");
 
-        // 3️⃣ Guardar estado anterior
         var oldStatus = ticket.Status;
 
-        // 4️⃣ Actualizar ticket
         ticket.Status = req.Status;
         ticket.UpdatedAt = DateTime.UtcNow;
 
-        // 5️⃣ Registrar actividad con usuario
         _db.TicketActivities.Add(new TicketActivity
         {
             TicketId = ticket.Id,
@@ -98,15 +130,13 @@ public class TicketsController : ControllerBase
             Message = $"Estado cambiado de {oldStatus} a {req.Status}",
             FromStatus = oldStatus,
             ToStatus = req.Status,
-            CreatedById = req.UserId,
+            CreatedById = userId,
             CreatedAt = DateTime.UtcNow
         });
 
         await _db.SaveChangesAsync();
         return Ok(ticket);
     }
-
-
 
     [HttpGet("{id:int}/timeline")]
     public async Task<IActionResult> GetTimeline(int id)
@@ -139,7 +169,6 @@ public class TicketsController : ControllerBase
     public class UpdateStatusRequest
     {
         public string Status { get; set; } = "";
-        public int UserId { get; set; }
     }
 
 }

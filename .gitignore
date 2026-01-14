@@ -1,0 +1,34 @@
+
+# Build artefacts
+bin/
+obj/
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+
+# VS/VSCode
+.vs/
+.vscode/
+
+# Logs / temp
+*.log
+*.tmp
+
+# .NET
+*.db
+*.sqlite
+*.mdb
+
+# Tu base de datos local
+ticketmanager.db
+
+# Publicar/Paquetes
+publish/
+packages/
+
+# Secretos / settings locales (ajusta según tu proyecto)
+appsettings.Development.json
+# Si tienes secretos en appsettings.json, considera NO subirlo:
+# appsettings.json
