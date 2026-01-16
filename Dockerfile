@@ -20,3 +20,4 @@ ENV ASPNETCORE_URLS=http://0.0.0.0:$PORT
 COPY --from=build /app/out ./
 
 ENTRYPOINT ["dotnet", "Backend.Api.dll"]
+EXPOSE 80
