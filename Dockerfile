@@ -2,15 +2,13 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-# Copiamos el csproj primero para cachear restore
-COPY GestiondeTicket/helpdesk/Backend.Api/Backend.Api.csproj GestiondeTicket/helpdesk/Backend.Api/
-RUN dotnet restore GestiondeTicket/helpdesk/Backend.Api/Backend.Api.csproj
+# Copiamos el csproj y restauramos
+COPY Backend.Api.csproj ./
+RUN dotnet restore
 
-# Copiamos todo
+# Copiamos todo el proyecto
 COPY . .
-
-# Publicamos
-RUN dotnet publish GestiondeTicket/helpdesk/Backend.Api/Backend.Api.csproj -c Release -o /app/out
+RUN dotnet publish -c Release -o /app/out
 
 # ===== RUN =====
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
