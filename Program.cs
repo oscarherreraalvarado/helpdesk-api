@@ -17,7 +17,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReact",
-        policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+        policy => policy.WithOrigins("https://helpdesk-frontend-tan.vercel.app")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+        //policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 });
 
 // JWT
@@ -40,8 +43,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddAuthorization();
 
+builder.Services.AddAuthorization();
 var app = builder.Build();
 
 /*if (app.Environment.IsDevelopment())
