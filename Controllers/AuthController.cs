@@ -48,6 +48,49 @@ public class AuthController : ControllerBase
         return Ok(new { token, user = userDto });
     }
 
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] RegisterRequest req)
+    {
+        if (string.IsNullOrWhiteSpace(req.Nombre) ||
+            string.IsNullOrWhiteSpace(req.Email) ||
+            string.IsNullOrWhiteSpace(req.Password))
+            return BadRequest("Nombre, Email y Password son requeridos.");
+
+        var email = req.Email.Trim().ToLower();
+
+        // ¿ya existe?
+        var exists = await _db.Users.AnyAsync(u => u.Email.ToLower() == email);
+        if (exists)
+            return Conflict("Ya existe un usuario con ese email.");
+
+        // crear usuario
+        var user = new User
+        {
+            Nombre = req.Nombre.Trim(),
+            Email = email,
+            Role = string.IsNullOrWhiteSpace(req.Role) ? "User" : req.Role.Trim()
+        };
+
+        // hashear password (con tu clase PasswordHasher)
+        user.PasswordHash = PasswordHasher.Hash(req.Password);
+
+        _db.Users.Add(user);
+        await _db.SaveChangesAsync();
+
+        // opcional: devolver token ya logueado automáticamente
+        var token = GenerateJwt(user);
+
+        var userDto = new UserDto
+        {
+            Id = user.Id,
+            Nombre = user.Nombre,
+            Email = user.Email,
+            Role = user.Role
+        };
+
+        return Created("", new { token, user = userDto });
+    }
+
     private string GenerateJwt(User user)
     {
         var jwt = _config.GetSection("Jwt");
@@ -82,4 +125,12 @@ public class LoginRequest
 {
     public string Email { get; set; } = "";
     public string Password { get; set; } = "";
+}
+
+public class RegisterRequest
+{
+    public string Nombre { get; set; } = "";
+    public string Email { get; set; } = "";
+    public string Password { get; set; } = "";
+    public string Role { get; set; } = "User"; // opcional, por defecto User
 }
