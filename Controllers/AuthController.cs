@@ -56,10 +56,10 @@ public class AuthController : ControllerBase
             string.IsNullOrWhiteSpace(req.Password))
             return BadRequest("Nombre, Email y Password son requeridos.");
 
-        var email = req.Email.Trim().ToLower();
+        var email = req.Email.Trim().ToLowerInvariant();
 
-        // ¿ya existe?
-        var exists = await _db.Users.AnyAsync(u => u.Email.ToLower() == email);
+        // ¿ya existe usuario con ese email?
+        var exists = await _db.Users.AnyAsync(u => u.Email == email);
         if (exists)
             return Conflict("Ya existe un usuario con ese email.");
 
@@ -68,7 +68,8 @@ public class AuthController : ControllerBase
         {
             Nombre = req.Nombre.Trim(),
             Email = email,
-            Role = string.IsNullOrWhiteSpace(req.Role) ? "User" : req.Role.Trim()
+            //Role = string.IsNullOrWhiteSpace(req.Role) ? "User" : req.Role.Trim()
+            Role = "User"
         };
 
         // hashear password (con tu clase PasswordHasher)
